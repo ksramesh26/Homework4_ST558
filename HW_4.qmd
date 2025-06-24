@@ -4,23 +4,215 @@ author: Keshav Ramesh
 format: html
 ---
 
-## Quarto
-
-Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
-
-## Running Code
-
-When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
-
 ```{r}
-1 + 1
+library(tidyverse)
+library(httr)
 ```
 
-You can add options to executable code like this 
+## Task 1 Conceptual Questions
+
+### Question 1 
+lapplly is a functino that applies a function to each element of a list and also returns a list. The purrr equivilent function is map(), which also applies a function to each element of a list and returns a list. 
+
+### Question 2 
 
 ```{r}
-#| echo: false
-2 * 2
+lapply(my_list, cor, method = "kendall")
 ```
 
-The `echo: false` option disables the printing of code (only output is displayed).
+### Question 3
+
+There is more stability from purrr as it enforeces certain types to return which gives greater consistance between functions. And there is also no consistent way to pass arguments onto the mapper function with the apply() family of functions. 
+
+### Question 4
+A side effect function performs and action rather than returning a value. 
+
+###  Question 5
+R uses lexical scoping, the sd variable will only be valid within the context of the function, as long as the sd() global function is not called within the function there should be no conflicts. 
+
+
+
+\newpage
+## Task 2: Writing R functions 
+
+### Question 1
+
+```{r}
+getRMSE = function(responses, predicted, ...) {
+  sqrt(mean((responses - predicted)^2, ...))
+}
+```
+
+### Question 2
+```{r}
+set.seed(10)
+n <- 100
+x <- runif(n)
+resp <- 3 + 10*x + rnorm(n)
+pred <- predict(lm(resp ~ x), data.frame(x))
+
+print(resp)
+```
+
+```{r}
+getRMSE(resp, pred)
+```
+```{r}
+resp_missing = resp
+resp_missing[c(2, 3)] = NA_real_
+
+resp_missing
+```
+```{r}
+#test with missing 2 values
+getRMSE(resp_missing, pred)
+# test with na.rm 
+getRMSE(resp_missing, pred, na.rm = TRUE)
+
+```
+
+### Question 3
+
+```{r}
+getMAE <- function(actual, predicted, ...) {
+  mean(abs(actual - predicted), ...)
+}
+```
+
+
+### Question 4
+
+```{r}
+set.seed(10)
+n <- 100
+x <- runif(n)
+resp <- 3 + 10 * x + rnorm(n)
+pred <- predict(lm(resp ~ x), data.frame(x = x))
+```
+
+
+```{r}
+# test MAE function
+getMAE(resp, pred)
+```
+
+```{r}
+## add 2 missing values
+resp_missing = resp
+resp_missing[c(3, 4)] = NA_real_
+
+resp_missing
+```
+
+
+```{r}
+
+## test with 2 missing values
+getMAE(resp_missing, pred)
+## test with na,rm
+getRMSE(resp_missing, pred, na.rm = TRUE)
+
+```
+### Question 5
+
+
+```{r}
+getMetrics = function(response, predicted, metric = c("RMSE", "MAE"), ...) {
+  ## Check inputs
+  if(is.atomic(response) && is.atomic(predicted) &&
+     is.numeric(response) && is.numeric(predicted) &&
+     is.vector(response) && is.numeric(predicted)) {
+    
+  } else {
+    return("Both inputs must be numeric (atomic) vectors")
+  }
+  
+  result = list()
+  
+  if("RMSE" %in% metric) {
+    result$RMSE = getRMSE(response, predicted, ...)
+  }
+  
+  if("MAE" %in% metric) {
+    result$MAE = getMAE(response, predicted, ...)
+  }
+  
+  
+  return(result)
+  
+}
+```
+
+### Question 6
+
+```{r}
+set.seed(10)
+n <- 100
+x <- runif(n)
+resp <- 3 + 10 * x + rnorm(n)
+pred <- predict(lm(resp ~ x), data.frame(x = x))
+```
+
+
+```{r}
+## One of each Metric
+getMetrics(resp, pred, metric = "RMSE")
+
+
+getMetrics(resp, pred, metric = "MAE")
+
+
+#Both metrics
+getMetrics(resp, pred)
+
+
+```
+```{r}
+#Test with missing values 
+getMetrics(resp_missing, pred, metric = "RMSE")
+#Test with missing value accounted for 
+getMetrics(resp_missing, pred, metric = "RMSE", na.rm = T)
+```
+```{r}
+getMetrics(as.data.frame(resp), pred)
+
+getMetrics(resp, as.character(pred))
+```
+\newpage
+## Task 3
+
+### Question 1
+
+```{r}
+api_key = a0e72eb552244c0989ffa388cc1285c3
+
+topic = "Iran"
+
+url = "https://newsapi.org/v2/everything"
+
+News_stories = 
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
