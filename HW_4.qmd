@@ -7,6 +7,7 @@ format: html
 ```{r}
 library(tidyverse)
 library(httr)
+library(jsonlite)
 ```
 
 ## Task 1 Conceptual Questions
@@ -184,25 +185,69 @@ getMetrics(resp, as.character(pred))
 ### Question 1
 
 ```{r}
-api_key = a0e72eb552244c0989ffa388cc1285c3
+api_key = "a0e72eb552244c0989ffa388cc1285c3"
 
-topic = "Iran"
+
 
 url = "https://newsapi.org/v2/everything"
 
-News_stories = 
+news_stories = httr::GET(url, query = list(
+  q = "Iran",
+  from = "2025-06-15",
+  sortBy = "popularity",
+  apiKey = api_key
+))
 
+```
+
+### Question 2 
+
+```{r}
+news_stories_parsed = fromJSON(rawToChar(news_stories$content))
+
+articles = as_tibble(news_stories_parsed$articles)
+
+articles
 ```
 
 
 
+### Question 3
+
+```{r}
+query_news = function(query, date, api_key) {
+  
+  news_stories = httr::GET(url, query = list(
+  q = query,
+  from = date,
+  sortBy = "popularity",
+  apiKey = api_key
+  ))
+  
+  news_stories_parsed = fromJSON(rawToChar(news_stories$content))
+  
+  
+  if(!is.null(news_stories_parsed$articles)){
+    return(as_tibble(news_stories_parsed$articles))
+  } else{
+   return("No Articles Found") 
+  }
+  
+}
+```
 
 
 
+```{r}
+Iran_News = query_news("Iran", "2025-06-23", api_key)
+
+Iran_News
+```
 
 
+```{r}
 
-
+```
 
 
 
