@@ -17,7 +17,7 @@ lapplly is a functino that applies a function to each element of a list and also
 
 ### Question 2 
 
-```{r}
+```{r, eval = FALSE}
 lapply(my_list, cor, method = "kendall")
 ```
 
@@ -164,7 +164,7 @@ getMetrics(resp, pred, metric = "MAE")
 
 
 #Both metrics
-getMetrics(resp, pred)
+getMetrics(resp, pred, metric = c("RMSE", "MAE"))
 
 
 ```
@@ -186,8 +186,6 @@ getMetrics(resp, as.character(pred))
 
 ```{r}
 api_key = "a0e72eb552244c0989ffa388cc1285c3"
-
-
 
 url = "https://newsapi.org/v2/everything"
 
@@ -239,18 +237,10 @@ query_news = function(query, date, api_key) {
 
 
 ```{r}
-Iran_News = query_news("Iran", "2025-06-23", api_key)
+gamestop_news = query_news("gamestop", "2025-06-01", api_key)
 
-Iran_News
+gamestop_news
 ```
-
-
-```{r}
-
-```
-
-
-
 
 
 
